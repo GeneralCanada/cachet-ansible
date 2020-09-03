@@ -1,0 +1,20 @@
+- name: Create a new database with name 'cachet'
+  mysql_db:
+    name: cachet
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    state: present
+
+- name: Create database user with name 'cachetuser' and password '123' with all database privileges
+  mysql_user:
+    name: cachetuser
+    password: 'test'
+    priv: 'cachet.*:ALL'
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    state: present
+
+- name: Reload privilege tables
+  command: 'mysql -ne "{{ item }}"'
+  with_items:
+    - FLUSH PRIVILEGES
+  changed_when: False
+
