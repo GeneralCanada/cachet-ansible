@@ -7,7 +7,7 @@
 - name: Create database user with name 'cachetuser' and password '123' with all database privileges
   mysql_user:
     name: cachetuser
-    password: 'test'
+    password: '123'
     priv: 'cachet.*:ALL'
     login_unix_socket: /var/run/mysqld/mysqld.sock
     state: present

@@ -1,1 +1,11 @@
 - name: "make directory of /var/www/cachet/"
+
+- name: "composer install"
+
+- name: "git clone"
+
+- name: "777 permission changes"
+
+- name: "php artisan commands
+
+- name: "nginx default file change and restart"    
