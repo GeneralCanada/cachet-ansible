@@ -1,0 +1,12 @@
+- name: "Copy a new "default nginx config  file into place"
+  copy:
+    src: /etc/ansible/roles/cachet-install/files/default
+    dest: /etc/nginx/sites-available/default
+    owner: root
+    group: root
+    mode: '0744'
+
+- name: Restart nginx
+  service:
+    name: nginx
+    state: restarted

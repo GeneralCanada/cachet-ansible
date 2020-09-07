@@ -6,14 +6,15 @@
     group: root
     mode: '0755'
 
-- name: "composer install"
+- name: "composer download/install"
   shell: ~/composer1.sh >> ~/log1.txt
 
-- name: "move composer to user bin"
+- name: "move composer to user bin and make executable"
   copy: 
     remote_src: yes
     src: /home/ryan/composer.phar 
     dest: /usr/bin/composer 
+    mode: 0744
 
 - name: "make directory of /var/www/cachet/"
   file:
@@ -25,7 +26,7 @@
   git:
     repo: "https://github.com/cachethq/Cachet.git"
     dest: /var/www/cachet/
-    version: 2.4
+    version: "2.4"
 
 - name: "create .env file from example env file"
   copy:
@@ -41,20 +42,34 @@
     group: www-data
 
 
-- name: "replace username"
+- name: "replace username in .env file"
   replace:
     path: /var/www/cachet/.env
     regexp: 'DB_USERNAME=homestead'
     replace: 'DB_USERNAME=cachetuser'
 
-- name: "replace password"
+- name: "replace password in .env file"
   replace:
     path: /var/www/cachet/.env
-    regexp: 'DB_USERNAME=secret'
-    replace: 'DB_USERNAME=123'
+    regexp: 'DB_PASSWORD=secret'
+    replace: 'DB_PASSWORD=123'
 
 - name: "composer install command"
   shell: composer install --no-dev -o
   args:
     chdir: /var/www/cachet/
  
+- name: "Copy expect.exp to client"
+  copy:
+    src: /etc/ansible/roles/cachet-install/files/expect.exp
+    dest: ~/expect.exp
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: "application key command"
+  shell: php /var/www/cachet/artisan key:generate
+
+- name: "application install"
+  shell: ~/expect.exp > ~/expectscript.txt
+
