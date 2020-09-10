@@ -1,0 +1,66 @@
+- name: "Copy composer script over"
+  copy:
+    src: /etc/ansible/roles/cachet-install/files/composer.sh
+    dest: ~/composer1.sh
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: "composer download/install"
+  shell: ~/composer1.sh >> ~/log1.txt
+
+- name: "move composer to user bin and make executable"
+  copy: 
+    remote_src: yes
+    src: /home/ryan/composer.phar 
+    dest: /usr/bin/composer 
+    mode: 0744
+
+- name: "make directory of /var/www/cachet/"
+  file:
+    path: /var/www/cachet/
+    state: directory
+    mode: '0755'
+
+- name: "git clone"
+  git:
+    repo: "https://github.com/cachethq/Cachet.git"
+    dest: /var/www/cachet/
+    version: "2.4"
+
+- name: "create .env file from example env file"
+  copy:
+    remote_src: yes
+    src: /var/www/cachet/.env.example
+    dest: /var/www/cachet/.env
+
+- name: "chown permission changes *.* files"
+  file:
+    path: /var/www/cachet/
+    recurse: yes
+    owner: www-data
+    group: www-data
+
+
+- name: "replace username in .env file"
+  replace:
+    path: /var/www/cachet/.env
+    regexp: 'DB_USERNAME=homestead'
+    replace: 'DB_USERNAME=cachetuser'
+
+- name: "replace password in .env file"
+  replace:
+    path: /var/www/cachet/.env
+    regexp: 'DB_PASSWORD=secret'
+    replace: 'DB_PASSWORD=123'
+
+- name: "composer install command"
+  shell: composer install --no-dev -o
+  args:
+    chdir: /var/www/cachet/
+ 
+- name: "application key command"
+  shell: php /var/www/cachet/artisan key:generate
+
+- name: "cachet installer"
+  shell: php /var/www/cachet/artisan cachet:install -n

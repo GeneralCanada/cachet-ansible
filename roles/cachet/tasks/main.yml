@@ -25,6 +25,7 @@
     - mysql-server
     - php7.4-dev
     - python3-pip
+    - expect
     state: present
   
 - name: "need mysql python module"
