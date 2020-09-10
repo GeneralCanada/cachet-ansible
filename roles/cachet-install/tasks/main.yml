@@ -70,6 +70,5 @@
 - name: "application key command"
   shell: php /var/www/cachet/artisan key:generate
 
-- name: "application install"
-  shell: ~/expect.exp > ~/expectscript.txt
-
+- name: "cachet installer"
+  shell: php /var/www/cachet/artisan cachet:install -n
