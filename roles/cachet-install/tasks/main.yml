@@ -59,14 +59,6 @@
   args:
     chdir: /var/www/cachet/
  
-- name: "Copy expect.exp to client"
-  copy:
-    src: /etc/ansible/roles/cachet-install/files/expect.exp
-    dest: ~/expect.exp
-    owner: root
-    group: root
-    mode: '0755'
-
 - name: "application key command"
   shell: php /var/www/cachet/artisan key:generate
 
