@@ -1,0 +1,3 @@
+servers:
+  hosts:
+    192.168.2.100 ansible_user=ccadmin ansible_become_user=root
