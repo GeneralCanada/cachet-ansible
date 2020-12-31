@@ -12,7 +12,7 @@
 - name: "move composer to user bin and make executable"
   copy: 
     remote_src: yes
-    src: /home/ryan/composer.phar 
+    src: ~/composer.phar 
     dest: /usr/bin/composer 
     mode: 0744
 
