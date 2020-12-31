@@ -24,8 +24,11 @@
     - nginx
     - mysql-server
     - php7.4-dev
-    - python3-pip
     - expect
+    - virtualenv
+    - python3
+    - python3-pip
+    - python3-setuptools
     state: present
   
 - name: "need mysql python module"
