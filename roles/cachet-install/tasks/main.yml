@@ -9,12 +9,6 @@
 - name: "composer download/install"
   shell: ~/composer1.sh >> ~/log1.txt
 
-- name: "move composer to user bin and make executable"
-  copy: 
-    remote_src: yes
-    src: ~/composer.phar 
-    dest: /usr/bin/composer 
-    mode: 0744
 
 - name: "make directory of /var/www/cachet/"
   file:
@@ -38,8 +32,8 @@
   file:
     path: /var/www/cachet/
     recurse: yes
-    owner: www-data
-    group: www-data
+    owner: ccadmin
+    group: ccadmin
 
 
 - name: "replace username in .env file"
@@ -58,9 +52,18 @@
   shell: composer install --no-dev -o
   args:
     chdir: /var/www/cachet/
- 
+  become_user: ccadmin
+
 - name: "application key command"
   shell: php /var/www/cachet/artisan key:generate
 
 - name: "cachet installer"
   shell: php /var/www/cachet/artisan cachet:install -n
+
+- name: "chown permission changes *.* files"
+  file:
+    path: /var/www/cachet/
+    recurse: yes
+    owner: www-data
+    group: www-data
+
